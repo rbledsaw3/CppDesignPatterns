@@ -50,6 +50,7 @@
  */
 
 #include <iostream>
+#include <memory>
 
 // Cross-Platform UI Element example for Windows/Mac/Linux and Buttons/Menus/Diags
 
@@ -70,11 +71,14 @@ class Dialog {
         virtual void draw() = 0; // pure virtual function
 };
 
+// Smart pointers provide automajick lifetime management of heap objects. This
+// ensures that objects are deallocated if they are no longer in use, which
+// can prevent memory leaks
 class GUIFactory {
     public:
-        virtual Button* createButton() = 0;
-        virtual Menu* createMenu() = 0;
-        virtual Dialog* createDialog() = 0;
+        virtual std::unique_ptr<Button> createButton() = 0;
+        virtual std::unique_ptr<Menu> createMenu() = 0;
+        virtual std::unique_ptr<Dialog> createDialog() = 0;
 };
 
 // Concrete element classes for Windows, Linux, and MacOS:
@@ -146,62 +150,62 @@ class MacOSDialog : public Dialog {
 
 class WindowsFactory : public GUIFactory {
     public:
-        Button* createButton() override {
-            return new WindowsButton();
+        std::unique_ptr<Button> createButton() override {
+            return std::make_unique<WindowsButton>();
         }
 
-        Menu* createMenu() override {
-            return new WindowsMenu();
+        std::unique_ptr<Menu> createMenu() override {
+            return std::make_unique<WindowsMenu>();
         }
 
-        Dialog* createDialog() override {
-            return new WindowsDialog();
+        std::unique_ptr<Dialog> createDialog() override {
+            return std::make_unique<WindowsDialog>();
         }
 };
 
 class LinuxFactory : public GUIFactory {
     public:
-        Button* createButton() override {
-            return new LinuxButton();
+        std::unique_ptr<Button> createButton() override {
+            return std::make_unique<LinuxButton>();
         }
 
-        Menu* createMenu() override {
-            return new LinuxMenu();
+        std::unique_ptr<Menu> createMenu() override {
+            return std::make_unique<LinuxMenu>();
         }
 
-        Dialog* createDialog() override {
-            return new LinuxDialog();
+        std::unique_ptr<Dialog> createDialog() override {
+            return std::make_unique<LinuxDialog>();
         }
 };
 
 class MacOSFactory : public GUIFactory {
     public:
-        Button* createButton() override {
-            return new MacOSButton();
+        std::unique_ptr<Button> createButton() override {
+            return std::make_unique<MacOSButton>();
         }
 
-        Menu* createMenu() override {
-            return new MacOSMenu();
+        std::unique_ptr<Menu> createMenu() override {
+            return std::make_unique<MacOSMenu>();
         }
 
-        Dialog* createDialog() override {
-            return new MacOSDialog();
+        std::unique_ptr<Dialog> createDialog() override {
+            return std::make_unique<MacOSDialog>();
         }
 };
 
 int main() {
-    GUIFactory* factory;
-    Button* button;
-    Menu* menu;
-    Dialog* dialog;
+    std::unique_ptr<GUIFactory> factory;
+    std::unique_ptr<Button> button;
+    std::unique_ptr<Menu> menu;
+    std::unique_ptr<Dialog> dialog;
 
     // Config factory and products based on preprocessor directives
     #ifdef WINDOWS
-        factory = new WindowsFactory();
+        factory = std::make_unique<WindowsFactory>();
     #elif defined(LINUX)
-        factory = new LinuxFactory();
+        factory = std::make_unique<LinuxFactory>();
     #else //MacOS
-        factory = new MacOSFactory();
+        factory = std::make_unique<MacOSFactory>();
     #endif
 
     button = factory->createButton();
@@ -211,17 +215,6 @@ int main() {
     button->draw();
     menu->draw();
     dialog->draw();
-
-
-    // Remembering to manually call delete has an inherent risk for memory leaks.
-    // Future refactoring should be done to used smart pointers to eliminate
-    // the need to allocate memory via new/delete
-    delete dialog;
-    delete menu;
-    delete button;
-    delete factory;
-
-
 
     return 0;
 }
