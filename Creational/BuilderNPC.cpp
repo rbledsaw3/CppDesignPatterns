@@ -1,5 +1,5 @@
 /* This Builder pattern creates NPCs with various attributes such as 'name',
- * 'health', 'armor', 'weapon', 'magic', 'disposition'. The 'Director' class 
+ * 'health', 'armor', 'weapon', 'magic', etc. The 'Director' class 
  * will handle the construction of these characters
  */
 
@@ -20,7 +20,7 @@ int roll(int diceQty, int diceSides) {
     return results;
 }
 
-class NPC {
+class Character {
     public:
         std::string name;
         int health;
@@ -50,74 +50,142 @@ class NPC {
         }
 };
 
-class NPCBuilder {
+class CharacterBuilder {
     public:
-        virtual ~NPCBuilder() = default;
-
-        virtual void set_name(const std::string& name) = 0;
-        virtual void set_health(int health) = 0;
-        virtual void set_armor(const std::string& armor) = 0;
-        virtual void set_weapon(const std::string& weapon) = 0;
-        virtual void set_magic(const std::string& magic) = 0;
-        virtual void set_strength(int strength) = 0;
-        virtual void set_intelligence(int intelligence) = 0;
-        virtual void set_wisdom(int wisdom) = 0;
-        virtual void set_dexterity(int dexterity) = 0;
-        virtual void set_constitution(int constitution) = 0;
-        virtual void set_charisma(int charisma) = 0;
-
-        virtual std::unique_ptr<NPC> get_npc() = 0;
-
+        virtual ~CharacterBuilder() {}
+        virtual void buildCharacterAttributes() = 0;
+        virtual std::shared_ptr<Character> getCharacter() = 0;
 };
 
-class HeroBuilder : public NPCBuilder {
-    std::unique_ptr<NPC> m_npc;
+class HeroBuilder : public CharacterBuilder {
     public:
-        HeroBuilder(): m_npc(std::make_unique<NPC>()) {}
+        std::shared_ptr<Character> character;
 
+        HeroBuilder() { 
+            this->reset(); 
+        }
 
-         void set_name(const std::string& name) override { m_npc->name = name; }
-         void set_health(int health) override { m_npc->health = health; }
-         void set_armor(const std::string& armor) override { m_npc->armor = armor; }
-         void set_weapon(const std::string& weapon) override { m_npc->weapon = weapon; }
-         void set_magic(const std::string& magic) override { m_npc->magic = magic; }
-         void set_strength(int strength) override { m_npc->strength = strength; }
-         void set_intelligence(int intelligence) override { m_npc->intelligence = intelligence; }
-         void set_wisdom(int wisdom) override { m_npc->wisdom = wisdom; }
-         void set_dexterity(int dexterity) override { m_npc->dexterity = dexterity; }
-         void set_constitution(int constitution) override { m_npc->constitution = constitution; }
-         void set_charisma(int charisma) override { m_npc->charisma = charisma; }
+        void reset() {
+            character = std::make_shared<Character>();
+        }
 
-         std::unique_ptr<NPC> get_npc() override { return std::move(m_npc); }
+        void buildCharacterAttributes() override {
+            character->name = "Link";
+            character->health = 3;
+            character->armor = "Green Tunic";
+            character->weapon = "Fighter Sword";
+            character->magic = "Latern";
+            character->strength = roll(1,6)+12;
+            character->intelligence = roll(1,6)+9;
+            character->wisdom = roll(1,4)+8;
+            character->dexterity = roll(1,8)+10;
+            character->constitution = roll(1,8)+10;
+            character->charisma = roll(1,6)+12;
+        }
 
+        std::shared_ptr<Character> getCharacter() override {
+            return character;
+        }
 };
 
-class NPCDirector {
+
+class MonsterBuilder : public CharacterBuilder {
     public:
-        void create_hero(NPCBuilder& builder) {
-            builder.set_name("Link");
-            builder.set_health(3);
-            builder.set_armor("Green Tunic");
-            builder.set_weapon("Fighter Sword");
-            builder.set_magic("Latern");
-            builder.set_strength(roll(9,2));
-            builder.set_intelligence(roll(6,3));
-            builder.set_wisdom(roll(3,6));
-            builder.set_dexterity(roll(9,2));
-            builder.set_constitution(roll(9,2));
-            builder.set_charisma(roll(3,6));
+        std::shared_ptr<Character> character;
+
+        MonsterBuilder() { 
+            this->reset(); 
+        }
+
+        void reset() {
+            character = std::make_shared<Character>();
+        }
+
+        void buildCharacterAttributes() override {
+            character->name = "Moblin";
+            character->health = 2;
+            character->armor = "None";
+            character->weapon = "Spear";
+            character->magic = "None";
+            character->strength = roll(1,4)+15;
+            character->intelligence = roll(1,4)+2;
+            character->wisdom = roll(1,4)+2;
+            character->dexterity = roll(3,6);
+            character->constitution = roll(1,8)+10;
+            character->charisma = roll(1,4)+2;
+        }
+
+        std::shared_ptr<Character> getCharacter() override {
+            return character;
+        }
+};
+
+class NPCBuilder : public CharacterBuilder {
+    public:
+        std::shared_ptr<Character> character;
+
+        NPCBuilder() { 
+            this->reset(); 
+        }
+
+        void reset() {
+            character = std::make_shared<Character>();
+        }
+
+        void buildCharacterAttributes() override {
+            character->name = "Pricess Zelda";
+            character->health = 12;
+            character->armor = "Sheika Robes";
+            character->weapon = "Gleaming Rapier";
+            character->magic = "Teleport";
+            character->strength = roll(1,6)+8;
+            character->intelligence = roll(1,6)+12;
+            character->wisdom = roll(1,4)+14;
+            character->dexterity = roll(1,6)+12;
+            character->constitution = roll(2,6)+6;
+            character->charisma = roll(1,4)+14;
+        }
+
+        std::shared_ptr<Character> getCharacter() override {
+            return character;
+        }
+};
+
+class CharacterDirector {
+    public:
+        void createHero(HeroBuilder& builder) {
+            builder.buildCharacterAttributes();
+        }
+        
+        void createMonster(MonsterBuilder& builder) {
+            builder.buildCharacterAttributes();
+        }
+
+        void createNPC(NPCBuilder& builder) {
+            builder.buildCharacterAttributes();
         }
 };
 
 
 int main() {
-    NPCDirector director;
-    HeroBuilder builder;
+    CharacterDirector director;
+    HeroBuilder heroBuilder;
+    MonsterBuilder monsterBuilder;
+    NPCBuilder npcBuilder;
+    
+    director.createHero(heroBuilder);
+    director.createMonster(monsterBuilder);
+    director.createNPC(npcBuilder);
 
-    director.create_hero(builder);
-    std::unique_ptr<NPC> hero = builder.get_npc();
-
+    std::shared_ptr<Character> hero = heroBuilder.getCharacter();
+    std::shared_ptr<Character> monster = monsterBuilder.getCharacter();
+    std::shared_ptr<Character> npc = npcBuilder.getCharacter();
+    
     hero->info();
+    std::cout << "\n";
+    monster->info();
+    std::cout << "\n";
+    npc->info();
 
     return 0;
 }
