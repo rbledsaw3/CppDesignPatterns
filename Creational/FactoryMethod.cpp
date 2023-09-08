@@ -46,10 +46,9 @@ class Circle : public GameObject {
     double radius;
 
     public:
-        Circle(double r) : radius(r) {
-            sprite = std::make_unique<BasicSprite>();
-            collider = std::make_unique<BasicCollider>();
-        }
+        Circle(double r) : radius(r),
+            sprite(std::make_unique<BasicSprite>()), 
+            collider(std::make_unique<BasicCollider>()) {}
 
         double getArea() {
             return M_PI * radius * radius;
@@ -75,10 +74,9 @@ class Square : public GameObject {
     double sideLength;
 
     public:
-        Square(double length) : sideLength(length) {
-            sprite = std::make_unique<BasicSprite>();
-            collider = std::make_unique<BasicCollider>();
-        }
+        Square(double length) : sideLength(length),
+            sprite(std::make_unique<BasicSprite>()), 
+            collider(std::make_unique<BasicCollider>()) {}
 
         double getArea() {
             return sideLength * sideLength;
@@ -105,10 +103,10 @@ class Rectangle : public GameObject {
     double sideHeight;
 
     public:
-        Rectangle(double length, double height) : sideLength(length), sideHeight(height) {
-            sprite = std::make_unique<BasicSprite>();
-            collider = std::make_unique<BasicCollider>();
-        }
+        Rectangle(double length, double height) : sideLength(length),
+            sideHeight(height),
+            sprite(std::make_unique<BasicSprite>()),
+            collider(std::make_unique<BasicCollider>()) {}
 
         double getArea() {
             return sideLength * sideHeight;
@@ -134,10 +132,9 @@ class Triangle : public GameObject {
     double sideLength;
 
     public:
-        Triangle(double length) : sideLength(length) {
-            sprite = std::make_unique<BasicSprite>();
-            collider = std::make_unique<BasicCollider>();
-        }
+        Triangle(double length) : sideLength(length),
+            sprite(std::make_unique<BasicSprite>()),
+            collider(std::make_unique<BasicCollider>()) {}
 
         double getArea() {
             return std::sqrt(3) * 0.5 * sideLength;
@@ -164,12 +161,13 @@ class Obround : public GameObject {
     double sideHeight;
 
     public:
-        Obround(double length, double height) : sideLength(length), sideHeight(height) {
+        Obround(double length, double height) : sideLength(length),
+            sideHeight(height),
+            sprite(std::make_unique<BasicSprite>()),
+            collider(std::make_unique<BasicCollider>()){ 
             if (length < height) {
                 throw std::invalid_argument("Length cannot be less than height for an obround");
             }
-            sprite = std::make_unique<BasicSprite>();
-            collider = std::make_unique<BasicCollider>();
         }
 
         double getArea() { // (PI * r ^ 2) * (l x h of rectangle between the semicircles)
