@@ -3,40 +3,41 @@
  * attributes can be added later).
  */
 
+#include <cmath>
 #include <iostream>
 #include <memory>
-#include <cmath>
 #include <stdexcept>
 
 class Sprite {
-    public:
-        virtual void draw() = 0;
+  public:
+    virtual void draw() = 0;
 };
 
 class Collider {
-    public:
-        virtual void collide() = 0;
+  public:
+    virtual void collide() = 0;
 };
 
-class BasicSprite : public Sprite{
-    public:
-        void draw() override {
-            std::cout << "Drawing a basic sprite...\n";
-        }
+class BasicSprite : public Sprite {
+  public:
+    void draw() override {
+      std::cout << "Drawing a basic sprite...\n";
+    }
 };
 
 class BasicCollider : public Collider {
-    public:
-        void collide() override {
-            std::cout << "Colliding basic collider...\n";
-        }
+  public:
+    void collide() override {
+      std::cout << "Colliding basic collider...\n";
+    }
 };
 
 class GameObject {
-    public:
-        virtual ~GameObject() {}
-        virtual void draw() = 0;
-        virtual void collide() = 0;
+  public:
+    virtual ~GameObject() {}
+
+    virtual void draw() = 0;
+    virtual void collide() = 0;
 };
 
 class Circle : public GameObject {
@@ -45,26 +46,27 @@ class Circle : public GameObject {
 
     double radius;
 
-    public:
-        Circle(double r) : radius(r),
-            sprite(std::make_unique<BasicSprite>()), 
-            collider(std::make_unique<BasicCollider>()) {}
+  public:
+    Circle(double r)
+      : radius(r),
+        sprite(std::make_unique<BasicSprite>()),
+        collider(std::make_unique<BasicCollider>()) {}
 
-        double getArea() {
-            return M_PI * radius * radius;
-        }
+    double getArea() {
+      return M_PI * radius * radius;
+    }
 
-        double getCircumference() {
-            return 2 * M_PI * radius;
-        }
+    double getCircumference() {
+      return 2 * M_PI * radius;
+    }
 
-        void draw() override {
-            sprite->draw();
-        }
+    void draw() override {
+      sprite->draw();
+    }
 
-        void collide() override {
-            collider->collide();
-        }
+    void collide() override {
+      collider->collide();
+    }
 };
 
 class Square : public GameObject {
@@ -73,26 +75,27 @@ class Square : public GameObject {
 
     double sideLength;
 
-    public:
-        Square(double length) : sideLength(length),
-            sprite(std::make_unique<BasicSprite>()), 
-            collider(std::make_unique<BasicCollider>()) {}
+  public:
+    Square(double length)
+      : sideLength(length),
+        sprite(std::make_unique<BasicSprite>()),
+        collider(std::make_unique<BasicCollider>()) {}
 
-        double getArea() {
-            return sideLength * sideLength;
-        }
+    double getArea() {
+      return sideLength * sideLength;
+    }
 
-        double getPerimeter() {
-            return 4 * sideLength;
-        }
+    double getPerimeter() {
+      return 4 * sideLength;
+    }
 
-        void draw() override {
-            sprite->draw();
-        }
+    void draw() override {
+      sprite->draw();
+    }
 
-        void collide() override {
-            collider->collide();
-        }
+    void collide() override {
+      collider->collide();
+    }
 };
 
 class Rectangle : public GameObject {
@@ -102,27 +105,28 @@ class Rectangle : public GameObject {
     double sideLength;
     double sideHeight;
 
-    public:
-        Rectangle(double length, double height) : sideLength(length),
-            sideHeight(height),
-            sprite(std::make_unique<BasicSprite>()),
-            collider(std::make_unique<BasicCollider>()) {}
+  public:
+    Rectangle(double length, double height)
+      : sideLength(length),
+        sideHeight(height),
+        sprite(std::make_unique<BasicSprite>()),
+        collider(std::make_unique<BasicCollider>()) {}
 
-        double getArea() {
-            return sideLength * sideHeight;
-        }
+    double getArea() {
+      return sideLength * sideHeight;
+    }
 
-        double getPerimeter() {
-            return 2 * (sideLength + sideHeight);
-        }
+    double getPerimeter() {
+      return 2 * (sideLength + sideHeight);
+    }
 
-        void draw() override {
-            sprite->draw();
-        }
+    void draw() override {
+      sprite->draw();
+    }
 
-        void collide() override {
-            collider->collide();
-        }
+    void collide() override {
+      collider->collide();
+    }
 };
 
 class Triangle : public GameObject {
@@ -131,26 +135,27 @@ class Triangle : public GameObject {
 
     double sideLength;
 
-    public:
-        Triangle(double length) : sideLength(length),
-            sprite(std::make_unique<BasicSprite>()),
-            collider(std::make_unique<BasicCollider>()) {}
+  public:
+    Triangle(double length)
+      : sideLength(length),
+        sprite(std::make_unique<BasicSprite>()),
+        collider(std::make_unique<BasicCollider>()) {}
 
-        double getArea() {
-            return std::sqrt(3) * 0.5 * sideLength;
-        }
+    double getArea() {
+      return std::sqrt(3) * 0.5 * sideLength;
+    }
 
-        double getCircumference() {
-            return 3 * sideLength;
-        }
+    double getCircumference() {
+      return 3 * sideLength;
+    }
 
-        void draw() override {
-            sprite->draw();
-        }
+    void draw() override {
+      sprite->draw();
+    }
 
-        void collide() override {
-            collider->collide();
-        }
+    void collide() override {
+      collider->collide();
+    }
 };
 
 class Obround : public GameObject {
@@ -160,100 +165,90 @@ class Obround : public GameObject {
     double sideLength;
     double sideHeight;
 
-    public:
-        Obround(double length, double height) : sideLength(length),
-            sideHeight(height),
-            sprite(std::make_unique<BasicSprite>()),
-            collider(std::make_unique<BasicCollider>()){ 
-            if (length < height) {
-                throw std::invalid_argument("Length cannot be less than height for an obround");
-            }
-        }
+  public:
+    Obround(double length, double height)
+      : sideLength(length),
+        sideHeight(height),
+        sprite(std::make_unique<BasicSprite>()),
+        collider(std::make_unique<BasicCollider>()) {
+      if (length < height) {
+        throw std::invalid_argument("Length cannot be less than height for an obround");
+      }
+    }
 
-        double getArea() { // (PI * r ^ 2) * (l x h of rectangle between the semicircles)
-            return M_PI * 0.5 * sideHeight * 0.5 * sideHeight * (sideLength - sideHeight) * (sideHeight);
-        }
+    double getArea() {  // (PI * r ^ 2) * (l x h of rectangle between the semicircles)
+      return M_PI * 0.5 * sideHeight * 0.5 * sideHeight * (sideLength - sideHeight) * (sideHeight);
+    }
 
-        double getPerimeter() {
-            return M_PI * sideHeight * 2 * (sideLength - sideHeight);
-        }
+    double getPerimeter() {
+      return M_PI * sideHeight * 2 * (sideLength - sideHeight);
+    }
 
-        void draw() override {
-            sprite->draw();
-        }
+    void draw() override {
+      sprite->draw();
+    }
 
-        void collide() override {
-            collider->collide();
-        }
+    void collide() override {
+      collider->collide();
+    }
 };
 
-
-enum class ObjectType {
-    Circle,
-    Square,
-    Rectangle,
-    Triangle,
-    Obround
-};
+enum class ObjectType { Circle, Square, Rectangle, Triangle, Obround };
 
 class GameObjectFactory {
-    public:
-        static std::unique_ptr<GameObject> createObject(ObjectType type, double size) {
-            switch (type) {
-                case ObjectType::Circle:
-                    return std::make_unique<Circle>(size);
-                case ObjectType::Square:
-                    return std::make_unique<Square>(size);
-                case ObjectType::Triangle:
-                    return std::make_unique<Triangle>(size);
-                default:
-                    return nullptr;
-            }
-        }
-        static std::unique_ptr<GameObject> createObject(ObjectType type, double size1, double size2) {
-            switch (type) {
-                case ObjectType::Rectangle:
-                    return std::make_unique<Rectangle>(size1, size2);
-                case ObjectType::Obround:
-                    return std::make_unique<Obround>(size1, size2);
-                default:
-                    return nullptr;
-            }
-        }
+  public:
+    static std::unique_ptr<GameObject> createObject(ObjectType type, double size) {
+      switch (type) {
+        case ObjectType::Circle:
+          return std::make_unique<Circle>(size);
+        case ObjectType::Square:
+          return std::make_unique<Square>(size);
+        case ObjectType::Triangle:
+          return std::make_unique<Triangle>(size);
+        default:
+          return nullptr;
+      }
+    }
+
+    static std::unique_ptr<GameObject> createObject(ObjectType type, double size1, double size2) {
+      switch (type) {
+        case ObjectType::Rectangle:
+          return std::make_unique<Rectangle>(size1, size2);
+        case ObjectType::Obround:
+          return std::make_unique<Obround>(size1, size2);
+        default:
+          return nullptr;
+      }
+    }
 };
 
 int main() {
-    std::unique_ptr<GameObject> obround;
+  std::unique_ptr<GameObject> obround;
 
-    std::unique_ptr<GameObject> circle = 
-        GameObjectFactory::createObject(ObjectType::Circle, 5.0);
-    std::unique_ptr<GameObject> square = 
-        GameObjectFactory::createObject(ObjectType::Square, 5.0);
-    std::unique_ptr<GameObject> triangle = 
-        GameObjectFactory::createObject(ObjectType::Triangle, 5.0);
+  std::unique_ptr<GameObject> circle = GameObjectFactory::createObject(ObjectType::Circle, 5.0);
+  std::unique_ptr<GameObject> square = GameObjectFactory::createObject(ObjectType::Square, 5.0);
+  std::unique_ptr<GameObject> triangle = GameObjectFactory::createObject(ObjectType::Triangle, 5.0);
 
-    std::unique_ptr<GameObject> rectangle = 
-        GameObjectFactory::createObject(ObjectType::Rectangle, 10.0, 2.0);
-    try {
-        obround = 
-            GameObjectFactory::createObject(ObjectType::Obround, 9.0, 2.0);
-    } catch (const std::invalid_argument& e) {
-        std::cerr << "Failed to create obround: " << e.what() << std::endl;
-    }
+  std::unique_ptr<GameObject> rectangle = GameObjectFactory::createObject(ObjectType::Rectangle, 10.0, 2.0);
+  try {
+    obround = GameObjectFactory::createObject(ObjectType::Obround, 9.0, 2.0);
+  } catch (const std::invalid_argument& e) {
+    std::cerr << "Failed to create obround: " << e.what() << std::endl;
+  }
 
-    circle->draw();
-    circle->collide();
-    triangle->draw();
-    triangle->collide();
-    square->draw();
-    square->collide();
-    rectangle->draw();
-    rectangle->collide();
+  circle->draw();
+  circle->collide();
+  triangle->draw();
+  triangle->collide();
+  square->draw();
+  square->collide();
+  rectangle->draw();
+  rectangle->collide();
 
-    if (obround) {
-        obround->draw();
-        obround->collide();
-    }
+  if (obround) {
+    obround->draw();
+    obround->collide();
+  }
 
-    return 0;
+  return 0;
 }

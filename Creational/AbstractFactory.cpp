@@ -10,7 +10,7 @@
  *  When creating a cross-platform UI toolkit where multiple families of
  *  products like Buttons, Menus, and Dialogs must have different versions
  *  depending on different client platforms (e.g. Windows, Linux, MacOS).
- *  
+ *
  *  Each platform would have it's own concrete factory interface that creates
  *  Buttons, Menus, and Dialogs. That way when creating UI elements, the
  *  application code only intefaces with the abstract factory and doesn't
@@ -57,164 +57,164 @@
 // Define abstract elements and factory interface
 
 class Button {
-    public:
-        virtual void draw() = 0; // pure virtual function
+  public:
+    virtual void draw() = 0;  // pure virtual function
 };
 
 class Menu {
-    public:
-        virtual void draw() = 0; // pure virtual function
+  public:
+    virtual void draw() = 0;  // pure virtual function
 };
 
 class Dialog {
-    public:
-        virtual void draw() = 0; // pure virtual function
+  public:
+    virtual void draw() = 0;  // pure virtual function
 };
 
 // Smart pointers provide automajick lifetime management of heap objects. This
 // ensures that objects are deallocated if they are no longer in use, which
 // can prevent memory leaks
 class GUIFactory {
-    public:
-        virtual std::unique_ptr<Button> createButton() = 0;
-        virtual std::unique_ptr<Menu> createMenu() = 0;
-        virtual std::unique_ptr<Dialog> createDialog() = 0;
+  public:
+    virtual std::unique_ptr<Button> createButton() = 0;
+    virtual std::unique_ptr<Menu> createMenu() = 0;
+    virtual std::unique_ptr<Dialog> createDialog() = 0;
 };
 
 // Concrete element classes for Windows, Linux, and MacOS:
 
 class WindowsButton : public Button {
-    public:
-        void draw() override {
-            std::cout << "WindowsButton\n";
-        }
+  public:
+    void draw() override {
+      std::cout << "WindowsButton\n";
+    }
 };
 
 class WindowsMenu : public Menu {
-    public:
-        void draw() override {
-            std::cout << "WindowsMenu\n";
-        }
+  public:
+    void draw() override {
+      std::cout << "WindowsMenu\n";
+    }
 };
 
 class WindowsDialog : public Dialog {
-    public:
-        void draw() override {
-            std::cout << "WindowsDialog\n";
-        }
+  public:
+    void draw() override {
+      std::cout << "WindowsDialog\n";
+    }
 };
 
 class LinuxButton : public Button {
-    public:
-        void draw() override {
-            std::cout << "LinuxButton\n";
-        }
+  public:
+    void draw() override {
+      std::cout << "LinuxButton\n";
+    }
 };
 
 class LinuxMenu : public Menu {
-    public:
-        void draw() override {
-            std::cout << "LinuxMenu\n";
-        }
+  public:
+    void draw() override {
+      std::cout << "LinuxMenu\n";
+    }
 };
 
 class LinuxDialog : public Dialog {
-    public:
-        void draw() override {
-            std::cout << "LinuxDialog\n";
-        }
+  public:
+    void draw() override {
+      std::cout << "LinuxDialog\n";
+    }
 };
 
 class MacOSButton : public Button {
-    public:
-        void draw() override {
-            std::cout << "MacOSButton\n";
-        }
+  public:
+    void draw() override {
+      std::cout << "MacOSButton\n";
+    }
 };
 
 class MacOSMenu : public Menu {
-    public:
-        void draw() override {
-            std::cout << "MacOSMenu\n";
-        }
+  public:
+    void draw() override {
+      std::cout << "MacOSMenu\n";
+    }
 };
 
 class MacOSDialog : public Dialog {
-    public:
-        void draw() override {
-            std::cout << "MacOSDialog\n";
-        }
+  public:
+    void draw() override {
+      std::cout << "MacOSDialog\n";
+    }
 };
 
 // Expanding concrete Factory classes to create new types
 
 class WindowsFactory : public GUIFactory {
-    public:
-        std::unique_ptr<Button> createButton() override {
-            return std::make_unique<WindowsButton>();
-        }
+  public:
+    std::unique_ptr<Button> createButton() override {
+      return std::make_unique<WindowsButton>();
+    }
 
-        std::unique_ptr<Menu> createMenu() override {
-            return std::make_unique<WindowsMenu>();
-        }
+    std::unique_ptr<Menu> createMenu() override {
+      return std::make_unique<WindowsMenu>();
+    }
 
-        std::unique_ptr<Dialog> createDialog() override {
-            return std::make_unique<WindowsDialog>();
-        }
+    std::unique_ptr<Dialog> createDialog() override {
+      return std::make_unique<WindowsDialog>();
+    }
 };
 
 class LinuxFactory : public GUIFactory {
-    public:
-        std::unique_ptr<Button> createButton() override {
-            return std::make_unique<LinuxButton>();
-        }
+  public:
+    std::unique_ptr<Button> createButton() override {
+      return std::make_unique<LinuxButton>();
+    }
 
-        std::unique_ptr<Menu> createMenu() override {
-            return std::make_unique<LinuxMenu>();
-        }
+    std::unique_ptr<Menu> createMenu() override {
+      return std::make_unique<LinuxMenu>();
+    }
 
-        std::unique_ptr<Dialog> createDialog() override {
-            return std::make_unique<LinuxDialog>();
-        }
+    std::unique_ptr<Dialog> createDialog() override {
+      return std::make_unique<LinuxDialog>();
+    }
 };
 
 class MacOSFactory : public GUIFactory {
-    public:
-        std::unique_ptr<Button> createButton() override {
-            return std::make_unique<MacOSButton>();
-        }
+  public:
+    std::unique_ptr<Button> createButton() override {
+      return std::make_unique<MacOSButton>();
+    }
 
-        std::unique_ptr<Menu> createMenu() override {
-            return std::make_unique<MacOSMenu>();
-        }
+    std::unique_ptr<Menu> createMenu() override {
+      return std::make_unique<MacOSMenu>();
+    }
 
-        std::unique_ptr<Dialog> createDialog() override {
-            return std::make_unique<MacOSDialog>();
-        }
+    std::unique_ptr<Dialog> createDialog() override {
+      return std::make_unique<MacOSDialog>();
+    }
 };
 
 int main() {
-    std::unique_ptr<GUIFactory> factory;
-    std::unique_ptr<Button> button;
-    std::unique_ptr<Menu> menu;
-    std::unique_ptr<Dialog> dialog;
+  std::unique_ptr<GUIFactory> factory;
+  std::unique_ptr<Button> button;
+  std::unique_ptr<Menu> menu;
+  std::unique_ptr<Dialog> dialog;
 
-    // Config factory and products based on preprocessor directives
-    #ifdef WINDOWS
-        factory = std::make_unique<WindowsFactory>();
-    #elif defined(LINUX)
-        factory = std::make_unique<LinuxFactory>();
-    #else //MacOS
-        factory = std::make_unique<MacOSFactory>();
-    #endif
+// Config factory and products based on preprocessor directives
+#ifdef WINDOWS
+  factory = std::make_unique<WindowsFactory>();
+#elif defined(LINUX)
+  factory = std::make_unique<LinuxFactory>();
+#else  // MacOS
+  factory = std::make_unique<MacOSFactory>();
+#endif
 
-    button = factory->createButton();
-    menu = factory->createMenu();
-    dialog = factory->createDialog();
+  button = factory->createButton();
+  menu = factory->createMenu();
+  dialog = factory->createDialog();
 
-    button->draw();
-    menu->draw();
-    dialog->draw();
+  button->draw();
+  menu->draw();
+  dialog->draw();
 
-    return 0;
+  return 0;
 }
