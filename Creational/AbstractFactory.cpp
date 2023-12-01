@@ -58,16 +58,19 @@
 
 class Button {
   public:
+    virtual ~Button() = default;
     virtual void draw() = 0;  // pure virtual function
 };
 
 class Menu {
   public:
+    virtual ~Menu() = default;
     virtual void draw() = 0;  // pure virtual function
 };
 
 class Dialog {
   public:
+    virtual ~Dialog() = default;
     virtual void draw() = 0;  // pure virtual function
 };
 
@@ -76,6 +79,7 @@ class Dialog {
 // can prevent memory leaks
 class GUIFactory {
   public:
+    virtual ~GUIFactory() = default;
     virtual std::unique_ptr<Button> createButton() = 0;
     virtual std::unique_ptr<Menu> createMenu() = 0;
     virtual std::unique_ptr<Dialog> createDialog() = 0;

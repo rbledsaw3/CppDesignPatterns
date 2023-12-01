@@ -15,16 +15,19 @@
 // Abstract Products and Factory
 class DatabaseConnection {
   public:
+    virtual ~DatabaseConnection() = default;
     virtual void connect() = 0;
 };
 
 class DatabaseCommand {
   public:
+    virtual ~DatabaseCommand() = default;
     virtual void execute(const std::string& query) = 0;
 };
 
 class DatabaseFactory {
   public:
+    virtual ~DatabaseFactory() = default;
     virtual std::unique_ptr<DatabaseConnection> createConnection() = 0;
     virtual std::unique_ptr<DatabaseCommand> createCommand() = 0;
 };

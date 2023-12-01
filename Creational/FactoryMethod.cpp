@@ -10,11 +10,13 @@
 
 class Sprite {
   public:
+    virtual ~Sprite() = default;
     virtual void draw() = 0;
 };
 
 class Collider {
   public:
+    virtual ~Collider() = default;
     virtual void collide() = 0;
 };
 
@@ -34,7 +36,7 @@ class BasicCollider : public Collider {
 
 class GameObject {
   public:
-    virtual ~GameObject() {}
+    virtual ~GameObject() = default;
 
     virtual void draw() = 0;
     virtual void collide() = 0;
@@ -47,16 +49,16 @@ class Circle : public GameObject {
     double radius;
 
   public:
-    Circle(double r)
+    explicit Circle(double r)
       : radius(r),
         sprite(std::make_unique<BasicSprite>()),
         collider(std::make_unique<BasicCollider>()) {}
 
-    double getArea() {
+    [[nodiscard]] double getArea() const {
       return M_PI * radius * radius;
     }
 
-    double getCircumference() {
+    [[nodiscard]] double getCircumference() const {
       return 2 * M_PI * radius;
     }
 
@@ -76,16 +78,16 @@ class Square : public GameObject {
     double sideLength;
 
   public:
-    Square(double length)
+    explicit Square(double length)
       : sideLength(length),
         sprite(std::make_unique<BasicSprite>()),
         collider(std::make_unique<BasicCollider>()) {}
 
-    double getArea() {
+    [[nodiscard]] double getArea() const {
       return sideLength * sideLength;
     }
 
-    double getPerimeter() {
+    [[nodiscard]] double getPerimeter() const {
       return 4 * sideLength;
     }
 
@@ -112,11 +114,11 @@ class Rectangle : public GameObject {
         sprite(std::make_unique<BasicSprite>()),
         collider(std::make_unique<BasicCollider>()) {}
 
-    double getArea() {
+    [[nodiscard]] double getArea() const {
       return sideLength * sideHeight;
     }
 
-    double getPerimeter() {
+    [[nodiscard]] double getPerimeter() const {
       return 2 * (sideLength + sideHeight);
     }
 
@@ -136,16 +138,16 @@ class Triangle : public GameObject {
     double sideLength;
 
   public:
-    Triangle(double length)
+    explicit Triangle(double length)
       : sideLength(length),
         sprite(std::make_unique<BasicSprite>()),
         collider(std::make_unique<BasicCollider>()) {}
 
-    double getArea() {
+    [[nodiscard]] double getArea() const {
       return std::sqrt(3) * 0.5 * sideLength;
     }
 
-    double getCircumference() {
+    [[nodiscard]] double getCircumference() const {
       return 3 * sideLength;
     }
 
@@ -176,11 +178,11 @@ class Obround : public GameObject {
       }
     }
 
-    double getArea() {  // (PI * r ^ 2) * (l x h of rectangle between the semicircles)
+    [[nodiscard]] double getArea() const {  // (PI * r ^ 2) * (l x h of rectangle between the semicircles)
       return M_PI * 0.5 * sideHeight * 0.5 * sideHeight * (sideLength - sideHeight) * (sideHeight);
     }
 
-    double getPerimeter() {
+    [[nodiscard]] double getPerimeter() const {
       return M_PI * sideHeight * 2 * (sideLength - sideHeight);
     }
 

@@ -8,12 +8,20 @@
 #include <random>
 #include <string>
 
-int roll(int diceQty, int diceSides) {
+struct DiceQty {
+    int value;
+};
+
+struct DiceSides {
+    int value;
+};
+
+int roll(DiceQty qty, DiceSides sides) {
   std::random_device rDev;
-  std::uniform_int_distribution<int> dist(1, diceSides);
+  std::uniform_int_distribution<int> dist(1, sides.value);
 
   int results = 0;
-  for (int i = 0; i < diceQty; ++i) {
+  for (int i = 0; i < qty.value; ++i) {
     results += dist(rDev);
   }
 
@@ -52,7 +60,7 @@ class Character {
 
 class CharacterBuilder {
   public:
-    virtual ~CharacterBuilder() {}
+    virtual ~CharacterBuilder() = default;
 
     virtual void buildCharacterAttributes() = 0;
     virtual std::shared_ptr<Character> getCharacter() = 0;
@@ -76,12 +84,12 @@ class HeroBuilder : public CharacterBuilder {
       character->armor = "Green Tunic";
       character->weapon = "Fighter Sword";
       character->magic = "Latern";
-      character->strength = roll(1, 6) + 12;
-      character->intelligence = roll(1, 6) + 9;
-      character->wisdom = roll(1, 4) + 8;
-      character->dexterity = roll(1, 8) + 10;
-      character->constitution = roll(1, 8) + 10;
-      character->charisma = roll(1, 6) + 12;
+      character->strength = roll(DiceQty { 1 }, DiceSides { 6 }) + 12;
+      character->intelligence = roll(DiceQty { 1 }, DiceSides { 6 }) + 9;
+      character->wisdom = roll(DiceQty { 1 }, DiceSides { 4 }) + 8;
+      character->dexterity = roll(DiceQty { 1 }, DiceSides { 8 }) + 10;
+      character->constitution = roll(DiceQty { 1 }, DiceSides { 8 }) + 10;
+      character->charisma = roll(DiceQty { 1 }, DiceSides { 6 }) + 12;
     }
 
     std::shared_ptr<Character> getCharacter() override {
@@ -107,12 +115,12 @@ class MonsterBuilder : public CharacterBuilder {
       character->armor = "None";
       character->weapon = "Spear";
       character->magic = "None";
-      character->strength = roll(1, 4) + 15;
-      character->intelligence = roll(1, 4) + 2;
-      character->wisdom = roll(1, 4) + 2;
-      character->dexterity = roll(3, 6);
-      character->constitution = roll(1, 8) + 10;
-      character->charisma = roll(1, 4) + 2;
+      character->strength = roll(DiceQty { 1 }, DiceSides { 4 }) + 15;
+      character->intelligence = roll(DiceQty { 1 }, DiceSides { 4 }) + 2;
+      character->wisdom = roll(DiceQty { 1 }, DiceSides { 4 }) + 2;
+      character->dexterity = roll(DiceQty { 3 }, DiceSides { 6 });
+      character->constitution = roll(DiceQty { 1 }, DiceSides { 8 }) + 10;
+      character->charisma = roll(DiceQty { 1 }, DiceSides { 4 }) + 2;
     }
 
     std::shared_ptr<Character> getCharacter() override {
@@ -138,12 +146,12 @@ class NPCBuilder : public CharacterBuilder {
       character->armor = "Sheika Robes";
       character->weapon = "Gleaming Rapier";
       character->magic = "Teleport";
-      character->strength = roll(1, 6) + 8;
-      character->intelligence = roll(1, 6) + 12;
-      character->wisdom = roll(1, 4) + 14;
-      character->dexterity = roll(1, 6) + 12;
-      character->constitution = roll(2, 6) + 6;
-      character->charisma = roll(1, 4) + 14;
+      character->strength = roll(DiceQty { 1 }, DiceSides { 6 }) + 8;
+      character->intelligence = roll(DiceQty { 1 }, DiceSides { 6 }) + 12;
+      character->wisdom = roll(DiceQty { 1 }, DiceSides { 4 }) + 14;
+      character->dexterity = roll(DiceQty { 1 }, DiceSides { 6 }) + 12;
+      character->constitution = roll(DiceQty { 2 }, DiceSides { 6 }) + 6;
+      character->charisma = roll(DiceQty { 1 }, DiceSides { 4 }) + 14;
     }
 
     std::shared_ptr<Character> getCharacter() override {
@@ -153,28 +161,27 @@ class NPCBuilder : public CharacterBuilder {
 
 class CharacterDirector {
   public:
-    void createHero(HeroBuilder& builder) {
+    static void createHero(HeroBuilder& builder) {
       builder.buildCharacterAttributes();
     }
 
-    void createMonster(MonsterBuilder& builder) {
+    static void createMonster(MonsterBuilder& builder) {
       builder.buildCharacterAttributes();
     }
 
-    void createNPC(NPCBuilder& builder) {
+    static void createNPC(NPCBuilder& builder) {
       builder.buildCharacterAttributes();
     }
 };
 
 int main() {
-  CharacterDirector director;
   HeroBuilder heroBuilder;
   MonsterBuilder monsterBuilder;
   NPCBuilder npcBuilder;
 
-  director.createHero(heroBuilder);
-  director.createMonster(monsterBuilder);
-  director.createNPC(npcBuilder);
+  CharacterDirector::createHero(heroBuilder);
+  CharacterDirector::createMonster(monsterBuilder);
+  CharacterDirector::createNPC(npcBuilder);
 
   std::shared_ptr<Character> hero = heroBuilder.getCharacter();
   std::shared_ptr<Character> monster = monsterBuilder.getCharacter();
